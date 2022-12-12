@@ -8,16 +8,23 @@ from api.utils import generate_sitemap, APIException
 api = Blueprint('api', __name__)
 
 
-@app.route('/user', methods=['GET'])
-def list_user():
-    user = User.query.all()
+@api.route('/user', methods=['GET'])
+def list_users():
+    users = User.query.all()
     data =[user.serialize() for user in users]
 
     return jsonify(data), 200
 
-@app.route('/character', methods=['GET'])
-def list_character():
-    character = Character.query.all()
+@api.route('/character', methods=['GET'])
+def list_characters():
+    characters = Character.query.all()
     data =[character.serialize() for character in characters]
+
+    return jsonify(data), 200
+
+@api.route('/planet', methods=['GET'])
+def list_planets():
+    planets = Planet.query.all()
+    data =[planet.serialize() for planet in planets]
 
     return jsonify(data), 200

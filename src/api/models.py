@@ -30,7 +30,7 @@ class Character(db.Model):
             "id": self.id,
             "name": self.name,
             "gender": self.gender,
-            "hair_color": self.gender,
+            "hair_color": self.hair_color,
         }
 
 class Planet(db.Model):
@@ -38,6 +38,14 @@ class Planet(db.Model):
     name = db.Column(db.String(120), unique=True, nullable=False)
     population = db.Column(db.String(120))
     clime = db.Column(db.String(80))
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "population": self.population,
+            "clime": self.clime,
+        }
     
 class FavoriteCharacter(db.Model):
     id = db.Column(db.Integer, primary_key=True)
