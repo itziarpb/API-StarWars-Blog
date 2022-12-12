@@ -28,3 +28,17 @@ def list_planets():
     data =[planet.serialize() for planet in planets]
 
     return jsonify(data), 200
+
+@api.route('/favoriteCharacter', methods=['GET'])
+def list_favorites_characters():
+    favorite_characters = FavoriteCharacter.query.all()
+    data =[favorite_character.serialize() for favorite_character in favorite_characters]
+
+    return jsonify(data), 200
+
+@api.route('/favoritePlanet', methods=['GET'])
+def list_favorites_planets():
+    favorites_planets = FavoritePlanet.query.all()
+    data =[favorites_planet.serialize() for favorites_planet in favorites_planets]
+
+    return jsonify(data), 200
