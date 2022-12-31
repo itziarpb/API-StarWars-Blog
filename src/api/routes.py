@@ -22,6 +22,12 @@ def list_characters():
 
     return jsonify(data), 200
 
+@api.route('/character/<int:character_id>', methods=['GET'])
+def one_character(character_id):
+    character = Character.query.filter(Character.id == character_id).first()
+
+    return jsonify(character.serialize()), 200
+
 @api.route('/planet', methods=['GET'])
 def list_planets():
     planets = Planet.query.all()
@@ -29,23 +35,17 @@ def list_planets():
 
     return jsonify(data), 200
 
-@api.route('/favoriteCharacter', methods=['GET'])
-def list_favorites_characters():
-    favorite_characters = FavoriteCharacter.query.all()
-    data =[favorite_character.serialize() for favorite_character in favorite_characters]
+@api.route('/planet/<int:planet_id>', methods=['GET'])
+def one_planet(planet_id):
+    planet = Planet.query.filter(Planet.id == planet_id).first()
 
-    return jsonify(data), 200
+    return jsonify(planet.serialize()), 200
 
-@api.route('/favoritePlanet', methods=['GET'])
-def list_favorites_planets():
-    favorites_planets = FavoritePlanet.query.all()
-    data =[favorites_planet.serialize() for favorites_planet in favorites_planets]
-
-    return jsonify(data), 200
-
-@api.route('/user/<idUser>/favorites', methods=['GET'])
+@api.route('/user/<int:idUser>/favorites', methods=['GET'])
 def list_favorites(idUser):
     usercharacters = FavoriteCharacter.query.filter(FavoriteCharacter.user_id == idUser)
-    datacharacters =[usercharacters.serialize() for usercharacter in usercharacters]
+    datacharacters =[usercharacter.serialize() for usercharacter in usercharacters]
+    userplanets = FavoritePlanet.query.filter(FavoritePlanet.user_id == idUser)
+    dataplanets =[userplanet.serialize() for userplanet in userplanets]
     
-    return jsonify(datacharacters), 200
+    return jsonify(datacharacters, dataplanets ), 200
