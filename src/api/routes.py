@@ -42,3 +42,10 @@ def list_favorites_planets():
     data =[favorites_planet.serialize() for favorites_planet in favorites_planets]
 
     return jsonify(data), 200
+
+@api.route('/user/<idUser>/favorites', methods=['GET'])
+def list_favorites(idUser):
+    usercharacters = FavoriteCharacter.query.filter(FavoriteCharacter.user_id == idUser)
+    datacharacters =[usercharacters.serialize() for usercharacter in usercharacters]
+    
+    return jsonify(datacharacters), 200
