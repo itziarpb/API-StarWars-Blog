@@ -58,8 +58,8 @@ class Planet(db.Model):
     
 class FavoriteCharacter(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    character_id = db.Column(db.Integer, db.ForeignKey('character.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    character_id = db.Column(db.Integer, db.ForeignKey('character.id'), nullable=False)
     user = db.relationship(User)
     character = db.relationship(Character)
 
@@ -72,8 +72,8 @@ class FavoriteCharacter(db.Model):
 
 class FavoritePlanet(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    planet_id = db.Column(db.Integer, db.ForeignKey('planet.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    planet_id = db.Column(db.Integer, db.ForeignKey('planet.id'), nullable=False)
     user = db.relationship(User)
     planet = db.relationship(Planet)
 
