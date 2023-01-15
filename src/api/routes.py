@@ -8,13 +8,6 @@ from api.utils import generate_sitemap, APIException
 api = Blueprint('api', __name__)
 
 
-@api.route('/user', methods=['GET'])
-def list_users():
-    users = User.query.all()
-    data =[user.serialize() for user in users]
-
-    return jsonify(data), 200
-
 @api.route('/character', methods=['GET'])
 def list_characters():
     characters = Character.query.all()
@@ -47,14 +40,22 @@ def one_planet(planet_id):
     
     return jsonify ({"mensaje": "Planeta no encontrado"}), 400
 
-@api.route('/user/<int:idUser>/favorites', methods=['GET'])
+@api.route('/users', methods=['GET'])
+def list_users():
+    users = User.query.all()
+    data =[user.serialize() for user in users]
+
+    return jsonify(data), 200
+
+@api.route('/users/<int:idUser>/favorites', methods=['GET'])
 def list_favorites(idUser):
     usercharacters = FavoriteCharacter.query.filter(FavoriteCharacter.user_id == idUser)
     datacharacters =[usercharacter.serialize() for usercharacter in usercharacters]
     userplanets = FavoritePlanet.query.filter(FavoritePlanet.user_id == idUser)
     dataplanets =[userplanet.serialize() for userplanet in userplanets]
+    data = datacharacters + dataplanets
     
-    return jsonify(datacharacters, dataplanets ), 200
+    return jsonify(data ), 200
 
 @api.route('<int:idUser>/favorite/character/<int:idCharacter>', methods=['POST'])
 def new_character(idUser,idCharacter):
@@ -63,4 +64,37 @@ def new_character(idUser,idCharacter):
     db.session.add(me)
     db.session.commit()
 
-    return jsonify({"mensaje": "Personaje creado"})
+    return jsonify({"mensaje": "Personaje añadido a favoritos"})
+
+@api.route('<int:idUser>/favorite/planet/<int:idPlanet>', methods=['POST'])
+def new_planet(idUser,idPlanet):
+    data = request.json
+    me = FavoritePlanet(user_id=idUser, planet_id=idPlanet)
+    db.session.add(me)
+    db.session.commit()
+
+    return jsonify({"mensaje": "Planeta añadido a favoritos"})
+
+@api.route('<int:idUser>/favorite/character/<int:idCharacter>', methods=['DELETE'])
+def delete_character(idUser,idCharacter):
+    try:
+        me = FavoriteCharacter.query.filter_by(user_id=idUser, character_id=idCharacter).one()
+        db.session.delete(me)
+        db.session.commit()
+        message = {"message": "Personaje eliminado de favoritos"}
+    except Exception as e:
+        message = {"message": "El personaje no se encuentra en favoritos"}
+
+    return jsonify(message)
+
+@api.route('<int:idUser>/favorite/planet/<int:idPlanet>', methods=['DELETE'])
+def delete_planet(idUser,idPlanet):
+    try:
+        me = FavoritePlanet.query.filter_by(user_id=idUser, planet_id=idPlanet).one()
+        db.session.delete(me)
+        db.session.commit()
+        message = {"message": "Planeta eliminado de favoritos"}
+    except Exception as e:
+        message = {"message": "El planeta no se encuentra en favoritos"}
+
+    return jsonify(message)
