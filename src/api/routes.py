@@ -7,7 +7,7 @@ from api.utils import generate_sitemap, APIException
 
 api = Blueprint('api', __name__)
 
-
+# GET LISTAR TODOS LOS PERSONAJES
 @api.route('/character', methods=['GET'])
 def list_characters():
     characters = Character.query.all()
@@ -15,6 +15,7 @@ def list_characters():
 
     return jsonify(data), 200
 
+# GET INFORMACION UN SOLO PERSONAJE
 @api.route('/character/<int:character_id>', methods=['GET'])
 def one_character(character_id):
     character = Character.query.filter_by(id = character_id).first()
@@ -24,6 +25,7 @@ def one_character(character_id):
     
     return jsonify ({"mensaje": "Personaje no encontrado"}), 400
 
+# GET LISTAR TODOS LOS PLANETAS
 @api.route('/planet', methods=['GET'])
 def list_planets():
     planets = Planet.query.all()
@@ -31,6 +33,7 @@ def list_planets():
 
     return jsonify(data), 200
 
+# GET INFORMACION UN SOLO PLANETA
 @api.route('/planet/<int:planet_id>', methods=['GET'])
 def one_planet(planet_id):
     planet = Planet.query.filter_by(id = planet_id).first()
@@ -40,6 +43,7 @@ def one_planet(planet_id):
     
     return jsonify ({"mensaje": "Planeta no encontrado"}), 400
 
+# GET LISTAR TODOS LOS USUARIOS
 @api.route('/users', methods=['GET'])
 def list_users():
     users = User.query.all()
@@ -47,6 +51,7 @@ def list_users():
 
     return jsonify(data), 200
 
+# GET LISTAR TODOS LOS FAVORITOS DEL USUARIO ACTUAL
 @api.route('/users/<int:idUser>/favorites', methods=['GET'])
 def list_favorites(idUser):
     usercharacters = FavoriteCharacter.query.filter(FavoriteCharacter.user_id == idUser)
@@ -57,6 +62,7 @@ def list_favorites(idUser):
     
     return jsonify(data ), 200
 
+#POST AÑADIR UN PERSONAJE A FAVORITO
 @api.route('<int:idUser>/favorite/character/<int:idCharacter>', methods=['POST'])
 def new_character(idUser,idCharacter):
     data = request.json
@@ -66,6 +72,7 @@ def new_character(idUser,idCharacter):
 
     return jsonify({"mensaje": "Personaje añadido a favoritos"})
 
+#POST AÑADIR UN PLANETA A FAVORITO
 @api.route('<int:idUser>/favorite/planet/<int:idPlanet>', methods=['POST'])
 def new_planet(idUser,idPlanet):
     data = request.json
@@ -75,6 +82,7 @@ def new_planet(idUser,idPlanet):
 
     return jsonify({"mensaje": "Planeta añadido a favoritos"})
 
+#DELETE UN PERSONAJE DE FAVORITO
 @api.route('<int:idUser>/favorite/character/<int:idCharacter>', methods=['DELETE'])
 def delete_character(idUser,idCharacter):
     try:
@@ -87,6 +95,7 @@ def delete_character(idUser,idCharacter):
 
     return jsonify(message)
 
+#DELETE UN PLANETA DE FAVORITO
 @api.route('<int:idUser>/favorite/planet/<int:idPlanet>', methods=['DELETE'])
 def delete_planet(idUser,idPlanet):
     try:
